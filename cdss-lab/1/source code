@@ -1,0 +1,62 @@
+#include <stdio.h>
+
+/* Global variables to store counts */
+int c = 0;  // Characters count
+int w = 0;  // Words count
+int s = 0;  // Spaces count
+int l = 0;  // Lines count
+
+/* Lexical analyzer rules */
+%%
+" "      { s++; w++; }      // Space encountered
+[\n]     { l++; w++; }      // Newline encountered
+[\t\n]   { w++; }           // Tab or newline encountered
+[^\t\n]  { c++; }           // Other characters encountered
+%%
+
+/* Function to wrap up lexer */
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    FILE *yyin;  // Input file pointer
+    yyin = fopen("Info.txt", "r");  // Open input file
+
+    if (yyin == NULL) {  // Check if file exists
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+    yylex();  // Call lexer
+
+    fclose(yyin);  // Close input file
+
+    // Print counts
+    printf("Characters = %d\nWords = %d\nSpaces = %d\nLines = %d\n", c, w, s, l);
+
+    return 0;
+}
+
+
+
+1b
+
+
+#include <stdio.h>
+
+/* Global variable to store the count of identifiers */
+int i = 0;
+
+/* Lexical analyzer rules */
+%%
+{letter}({letter}|{digit})* { i++; }  // Matches identifiers
+{digit}({letter}|{digit})* { i; }     // Matches a single digit identifier
+%%
+
+int main() {
+    printf("Enter the values:\n");
+    yylex(); // Call the lexer
+    printf("Number of identifiers = %d\n", i); // Print the count of identifiers
+    return 0;
+}

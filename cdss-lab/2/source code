@@ -1,0 +1,74 @@
+#include <stdio.h>
+
+int s=0, m=0;
+
+void main() {
+    FILE *yyin, *yyout;
+    yyin = fopen("f1.txt", "r");
+    yyout = fopen("f2.txt", "w");
+
+    if (yyin == NULL || yyout == NULL) {
+        printf("Error opening files!\n");
+        return;
+    }
+
+    int commentFlag = 0;
+    int c, prev = '\0';
+
+    while ((c = fgetc(yyin)) != EOF) {
+        if (commentFlag == 0 && c == '/') {
+            int next = fgetc(yyin);
+            if (next == '/') {
+                commentFlag = 1; // single line comment
+                s++;
+            } else if (next == '*') {
+                commentFlag = 2; // multi-line comment
+                m++;
+            } else {
+                fputc(c, yyout);
+                fputc(next, yyout);
+            }
+        } else if (commentFlag == 1 && c == '\n') {
+            commentFlag = 0;
+        } else if (commentFlag == 2 && prev == '*' && c == '/') {
+            commentFlag = 0;
+        } else if (commentFlag == 0) {
+            fputc(c, yyout);
+        }
+        prev = c;
+    }
+
+    fclose(yyin);
+    fclose(yyout);
+
+    printf("Number of single line comments: %d\n", s);
+    printf("Number of multi-line comments: %d\n", m);
+}
+
+2b
+
+#include <stdio.h>
+
+int c = 0;
+
+void main() {
+    printf("Enter the text:\n");
+    yylex();
+    if (c) {
+        printf("The given statement is compound.\n");
+    } else {
+        printf("The given statement is simple.\n");
+    }
+}
+
+int yywrap() {
+    return 1;
+}
+
+%%
+[a-zA-Z]*[ ](and|or|but|yet|so)[ ][a-zA-Z]* {c = 1;}
+.|[\n];
+%%
+
+
+
