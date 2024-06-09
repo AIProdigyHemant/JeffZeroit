@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <time.h>
+
+// Using for loop
+int main() {
+    int i, fact = 1, number;
+    clock_t start_time, end_time;
+    double cpu_time_used;
+
+    printf("Enter a number: ");
+    scanf("%d", &number);
+
+    start_time = clock(); // Start timer
+
+    for (i = 1; i <= number; i++) {
+        fact = fact * i;
+        end_time = clock(); // Check time after each iteration
+        cpu_time_used = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+        if (cpu_time_used >= 1.0) { // Check if time exceeds 1 second
+            printf("Time limit exceeded.");
+            return 0;
+        }
+    }
+
+    printf("Factorial of %d is: %d", number, fact);
+
+    return 0;
+}
+
+// Using Recursion
+#include <stdio.h>
+#include <time.h>
+
+long factorial(int n, clock_t start_time) {
+    if (n == 0)
+        return 1;
+    else {
+        clock_t end_time = clock();
+        double cpu_time_used = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+        if (cpu_time_used >= 1.0) { // Check if time exceeds 1 second
+            printf("Time limit exceeded.");
+            return 0;
+        }
+        return (n * factorial(n - 1, start_time));
+    }
+}
+
+void main() {
+    int number;
+    long fact;
+    clock_t start_time = clock(); // Start timer
+
+    printf("Enter a number: ");
+    scanf("%d", &number);
+
+    fact = factorial(number, start_time);
+
+    if (fact != 0)
+        printf("Factorial of %d is %ld\n", number, fact);
+}
+
+// Using do-while loop
+#include <stdio.h>
+#include <time.h>
+
+void main() {
+    int n, i = 1, f = 1;
+    clock_t start_time, end_time;
+    double cpu_time_used;
+
+    printf("\nEnter The Number: ");
+    scanf("%d", &n);
+
+    start_time = clock(); // Start timer
+
+    do {
+        f = f * i;
+        i++;
+        end_time = clock(); // Check time after each iteration
+        cpu_time_used = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+        if (cpu_time_used >= 1.0) { // Check if time exceeds 1 second
+            printf("Time limit exceeded.");
+            return;
+        }
+    } while (i <= n);
+
+    printf("\nThe Factorial of %d is %d", n, f);
+}
